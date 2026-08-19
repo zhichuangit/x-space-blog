@@ -1,0 +1,117 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import { baseUrl, SITE_TITLE } from '../../consts';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<BaseLayout title={`文章 | ${SITE_TITLE}`} description="所有博客文章">
+	<main class="wrapper">
+		<header class="page-header stack gap-2">
+			<h1>文章</h1>
+			<p>共 {posts.length} 篇 — 关于开发、设计与产品的随笔。</p>
+		</header>
+
+		<ul class="posts">
+			{
+				posts.map((post) => (
+					<li>
+						<a href={`${baseUrl}blog/${post.id}/`} class="post">
+							{post.data.heroImage && (
+								<div class="thumb">
+									<Image width={720} height={360} src={post.data.heroImage} alt="" />
+								</div>
+							)}
+							<div class="post-body stack gap-2">
+								<h2 class="title">{post.data.title}</h2>
+								<p class="excerpt">{post.data.description}</p>
+								<time datetime={post.data.pubDate.toISOString()}>
+									<FormattedDate date={post.data.pubDate} />
+								</time>
+							</div>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</main>
+</BaseLayout>
+
+<style>
+	.page-header {
+		margin-bottom: var(--space-xl);
+	}
+
+	.page-header h1 {
+		font-size: var(--text-4xl);
+	}
+
+	.page-header p {
+		color: var(--text-muted);
+	}
+
+	.posts {
+		display: grid;
+		gap: var(--space-l);
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.post {
+		display: grid;
+		gap: var(--space-m);
+		padding: var(--space-m);
+		border: 1px solid var(--card-border);
+		border-radius: var(--radius-lg);
+		background: var(--card);
+		box-shadow: var(--shadow-sm);
+		color: var(--text);
+		transition: transform var(--theme-transition), box-shadow var(--theme-transition),
+			border-color var(--theme-transition);
+	}
+
+	.post:hover {
+		text-decoration: none;
+		transform: translateY(-3px);
+		box-shadow: var(--shadow-md);
+		border-color: hsl(var(--accent));
+	}
+
+	.thumb {
+		border-radius: var(--radius-md);
+		overflow: hidden;
+	}
+
+	.thumb :global(img) {
+		width: 100%;
+		aspect-ratio: 2 / 1;
+		object-fit: cover;
+		display: block;
+	}
+
+	.title {
+		font-size: var(--text-2xl);
+	}
+
+	.excerpt {
+		color: var(--text-muted);
+	}
+
+	time {
+		font-size: var(--text-sm);
+		color: var(--text-muted);
+	}
+
+	@media (min-width: 50em) {
+		.post {
+			grid-template-columns: 16rem 1fr;
+			align-items: center;
+		}
+	}
+</style>

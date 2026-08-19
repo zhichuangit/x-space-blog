@@ -1,0 +1,28 @@
+# Decap CMS 配置
+# 本地模式：运行 `npx decap-server` 后访问 /admin 即可可视化编辑，
+# 内容自动 commit 并 push 到 GitHub 仓库。
+
+backend:
+  name: local
+  # 部署到线上（GitHub Pages 子路径）时，管理后台通常仅本地使用。
+  # 如需在线上使用后台，请改为 github 后端并配置 GitHub OAuth App。
+
+local_backend: true
+
+# 媒体文件（图片）上传目录
+media_folder: "src/assets/uploads"
+public_folder: "../assets/uploads"
+
+collections:
+  - name: "blog"
+    label: "博客文章"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "标题", name: "title", widget: "string" }
+      - { label: "摘要", name: "description", widget: "text" }
+      - { label: "发布日期", name: "pubDate", widget: "date", date_format: "MMM DD YYYY" }
+      - { label: "更新日期", name: "updatedDate", widget: "date", required: false, date_format: "MMM DD YYYY" }
+      - { label: "封面图", name: "heroImage", widget: "image", required: false, choose_url: false }
+      - { label: "正文", name: "body", widget: "markdown" }

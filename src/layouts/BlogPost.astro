@@ -1,0 +1,232 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from './BaseLayout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Icon from '../components/Icon.astro';
+import { baseUrl, SITE_TITLE } from '../consts';
+
+type Props = {
+	title: string;
+	description?: string;
+	pubDate: Date;
+	heroImage?: ImageMetadata;
+	tags?: string[];
+};
+
+const { title, description, pubDate, heroImage, tags = [] } = Astro.props;
+---
+
+<BaseLayout title={`${title} | ${SITE_TITLE}`} description={description}>
+	<main>
+		<article class="post stack gap-8">
+			<header class="post-header stack gap-4">
+				<div class="meta">
+					<Icon icon="calendar" size="1.1em" />
+					<FormattedDate date={pubDate} />
+					{pubDate.valueOf() > Date.now() && <span class="badge">即将发布</span>}
+				</div>
+
+				<h1 class="title">{title}</h1>
+
+				{
+					tags.length > 0 && (
+						<ul class="tags">
+							{tags.map((tag) => (
+								<li>
+									<Icon icon="tag" size="0.9em" />
+									{tag}
+								</li>
+							))}
+						</ul>
+					)
+				}
+			</header>
+
+			{
+				heroImage && (
+					<div class="hero">
+						<Image width={1020} height={510} src={heroImage} alt={title} />
+					</div>
+				)
+			}
+
+			<div class="prose">
+				<slot />
+			</div>
+
+			<footer class="post-footer">
+				<a href={`${baseUrl}blog`} class="back-link">
+					<Icon icon="arrow-right" size="1.2em" class="flip" />
+					返回文章列表
+				</a>
+			</footer>
+		</article>
+	</main>
+</BaseLayout>
+
+<style>
+	.post {
+		gap: var(--space-l);
+	}
+
+	.post-header {
+		gap: var(--space-xs);
+	}
+
+	.meta {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+		color: var(--text-muted);
+		font-size: var(--text-sm);
+	}
+
+	.badge {
+		padding: 0.1em 0.6em;
+		border-radius: 999rem;
+		background: var(--accent-washed);
+		color: var(--accent-text);
+		font-size: var(--text-xs);
+		font-weight: 600;
+	}
+
+	.title {
+		font-size: var(--text-4xl);
+		line-height: 1.05;
+	}
+
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-xs);
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		color: var(--text-muted);
+		font-size: var(--text-sm);
+	}
+
+	.tags li {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3em;
+		padding: 0.2em 0.7em;
+		border: 1px solid var(--border);
+		border-radius: 999rem;
+	}
+
+	.hero {
+		border-radius: var(--radius-lg);
+		overflow: hidden;
+		box-shadow: var(--shadow-md);
+	}
+
+	.hero :global(img) {
+		width: 100%;
+		display: block;
+	}
+
+	.post-footer {
+		margin-top: var(--space-l);
+		padding-top: var(--space-m);
+		border-top: 1px solid var(--border);
+	}
+
+	.back-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5em;
+		font-weight: 600;
+	}
+
+	.back-link .flip {
+		transform: rotate(180deg);
+	}
+
+	/* ===================== Prose ===================== */
+	.prose {
+		max-width: var(--content-width);
+		color: var(--text);
+		font-size: var(--text-lg);
+		line-height: 1.75;
+	}
+
+	.prose :global(h2) {
+		margin-top: var(--space-xl);
+		margin-bottom: var(--space-s);
+		font-size: var(--text-2xl);
+	}
+
+	.prose :global(h3) {
+		margin-top: var(--space-l);
+		margin-bottom: var(--space-xs);
+		font-size: var(--text-xl);
+	}
+
+	.prose :global(p) {
+		margin-bottom: var(--space-m);
+	}
+
+	.prose :global(a) {
+		color: var(--accent-text);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	.prose :global(ul),
+	.prose :global(ol) {
+		margin-bottom: var(--space-m);
+		padding-left: var(--space-l);
+	}
+
+	.prose :global(li) {
+		margin-bottom: var(--space-2xs);
+	}
+
+	.prose :global(blockquote) {
+		margin: var(--space-l) 0;
+		padding: var(--space-s) var(--space-m);
+		border-left: 3px solid hsl(var(--accent));
+		background: hsl(var(--accent) / 0.06);
+		border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+		color: var(--text-soft);
+	}
+
+	.prose :global(code) {
+		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+		font-size: 0.9em;
+		background: hsl(var(--gray-200));
+		padding: 0.15em 0.4em;
+		border-radius: var(--radius-sm);
+	}
+
+	.prose :global(pre) {
+		padding: var(--space-m);
+		border-radius: var(--radius-md);
+		overflow-x: auto;
+		background: hsl(221 39% 11%);
+		color: hsl(220 14% 96%);
+	}
+
+	.prose :global(pre code) {
+		background: none;
+		padding: 0;
+	}
+
+	.prose :global(img) {
+		border-radius: var(--radius-md);
+		box-shadow: var(--shadow-sm);
+	}
+
+	.prose :global(hr) {
+		border: none;
+		border-top: 1px solid var(--border);
+		margin: var(--space-xl) 0;
+	}
+
+	@media (max-width: 50em) {
+		.title {
+			font-size: var(--text-3xl);
+		}
+	}
+</style>

@@ -1,0 +1,152 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { baseUrl, SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
+const posts = (await getCollection('blog'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3);
+---
+
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+	<div class="wrapper hero stack gap-4">
+		<h1 class="hero-title">{SITE_TITLE}</h1>
+		<p class="hero-sub">{SITE_DESCRIPTION}</p>
+		<a href={`${baseUrl}blog`} class="cta">
+			阅读最新文章
+			<Icon icon="arrow-right" size="1.2em" />
+		</a>
+	</div>
+
+	<main class="wrapper">
+		<section class="section stack gap-8">
+			<header class="section-header stack gap-2">
+				<h2>最新文章</h2>
+				<p>记录开发、设计与思考的随笔。</p>
+			</header>
+
+			<ul class="post-list">
+				{
+					posts.map((post) => (
+						<li>
+							<a href={`${baseUrl}blog/${post.id}/`} class="post-card">
+								<h3>{post.data.title}</h3>
+								<p class="post-excerpt">{post.data.description}</p>
+								<time datetime={post.data.pubDate.toISOString()}>
+									{post.data.pubDate.toLocaleDateString('zh-CN', {
+										year: 'numeric',
+										month: 'long',
+										day: 'numeric',
+									})}
+								</time>
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</section>
+	</main>
+</BaseLayout>
+
+<style>
+	.hero {
+		padding-block: var(--space-2xl) var(--space-xl);
+		text-align: center;
+		align-items: center;
+		background: radial-gradient(50rem 28rem at 50% 0%, hsl(173 80% 40% / 0.1), transparent 65%);
+	}
+
+	.hero-title {
+		font-size: var(--text-5xl);
+		background: var(--gradient-accent);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+	}
+
+	.hero-sub {
+		max-width: 50ch;
+		color: var(--text-soft);
+		font-size: var(--text-lg);
+	}
+
+	.cta {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6em;
+		margin-top: var(--space-s);
+		padding: 0.75em 1.75em;
+		border-radius: 999rem;
+		color: var(--accent-text-over);
+		font-weight: 600;
+		background: var(--gradient-accent);
+		box-shadow: var(--shadow-md);
+		transition: transform var(--theme-transition), box-shadow var(--theme-transition);
+	}
+
+	.cta:hover {
+		text-decoration: none;
+		transform: translateY(-2px);
+		box-shadow: var(--shadow-lg);
+	}
+
+	.section-header h2 {
+		font-size: var(--text-3xl);
+	}
+
+	.section-header p {
+		color: var(--text-muted);
+	}
+
+	.post-list {
+		display: grid;
+		gap: var(--space-m);
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.post-card {
+		display: block;
+		padding: var(--space-l);
+		border: 1px solid var(--card-border);
+		border-radius: var(--radius-lg);
+		background: var(--card);
+		box-shadow: var(--shadow-sm);
+		transition: transform var(--theme-transition), box-shadow var(--theme-transition),
+			border-color var(--theme-transition);
+		color: var(--text);
+	}
+
+	.post-card:hover {
+		text-decoration: none;
+		transform: translateY(-3px);
+		box-shadow: var(--shadow-md);
+		border-color: hsl(var(--accent));
+	}
+
+	.post-card h3 {
+		font-size: var(--text-xl);
+		margin-bottom: var(--space-2xs);
+	}
+
+	.post-card .post-excerpt {
+		color: var(--text-muted);
+		margin-bottom: var(--space-xs);
+	}
+
+	.post-card time {
+		font-size: var(--text-sm);
+		color: var(--text-muted);
+	}
+
+	@media (min-width: 50em) {
+		.post-list {
+			grid-template-columns: repeat(2, 1fr);
+		}
+		.hero-title {
+			font-size: var(--text-6xl);
+		}
+	}
+</style>

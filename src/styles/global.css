@@ -1,0 +1,290 @@
+/*
+	Theme: X-Space Portfolio — Modern Dual-Theme System
+	Adopted into x-space-blog for a consistent visual language.
+	Accent: teal (#0d9488). Fonts: Space Grotesk + Inter.
+*/
+
+:root {
+	/* Color tokens (HSL channel triplets for alpha composition) */
+	--gray-0: 0 0% 100%;
+	--gray-50: 210 20% 98%;
+	--gray-100: 220 14% 96%;
+	--gray-200: 220 13% 91%;
+	--gray-300: 216 12% 84%;
+	--gray-400: 218 11% 65%;
+	--gray-500: 220 9% 46%;
+	--gray-600: 215 14% 34%;
+	--gray-700: 217 19% 27%;
+	--gray-800: 215 25% 17%; /* light mode card border */
+	--gray-900: 221 39% 11%;
+	--gray-999: 0 0% 0%; /* for overlays in light mode */
+
+	--accent: 173 80% 36%; /* Cyan/Teal */
+	--accent-washed: 173 80% 92%;
+
+	/* Brand gradients (current brand: cyan/teal) */
+	--gradient-accent: linear-gradient(45deg, hsl(199 89% 48%), hsl(173 80% 40%));
+	--gradient-accent-orange: linear-gradient(45deg, hsl(173 80% 40%), hsl(199 89% 48%));
+
+	/* Page background with subtle radial accents + noise texture */
+	--background: var(--gray-50);
+	--background-noise: url('/noise.png');
+
+	--gradient-subtle: linear-gradient(180deg, hsl(var(--gray-0)), hsl(var(--gray-100)));
+	--gradient-fade: linear-gradient(180deg, hsl(var(--gray-100) / 0), hsl(var(--gray-100)));
+
+	/* Text colors */
+	--text: var(--gray-900);
+	--text-strong: var(--gray-999);
+	--text-soft: var(--gray-700);
+	--text-muted: var(--gray-500);
+
+	--accent-text: hsl(var(--accent));
+	--accent-text-over: hsl(var(--gray-0));
+
+	/* Borders */
+	--border: var(--gray-200);
+
+	/* Card + surface backgrounds */
+	--card: hsl(var(--gray-0));
+	--card-border: hsl(var(--gray-200));
+
+	/* Shadows */
+	--shadow-color: 220 40% 30%;
+	--shadow-strength: 1%;
+	--shadow-sm: 0 2px 4px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 2%));
+	--shadow-md: 0 4px 8px -4px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 3%)),
+		0 8px 16px -8px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 5%));
+	--shadow-lg: 0 12px 24px -12px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 8%));
+
+	/* Spacing */
+	--space-3xs: 0.25rem;
+	--space-2xs: 0.5rem;
+	--space-xs: 0.75rem;
+	--space-s: 1rem;
+	--space-m: 1.5rem;
+	--space-l: 2rem;
+	--space-xl: 3rem;
+	--space-2xl: 4rem;
+	--space-3xl: 6rem;
+	--space-4xl: 8rem;
+
+	/* Type scale */
+	--text-xs: 0.75rem;
+	--text-sm: 0.875rem;
+	--text-md: 1rem;
+	--text-lg: 1.125rem;
+	--text-xl: 1.25rem;
+	--text-2xl: 1.5rem;
+	--text-3xl: 1.875rem;
+	--text-4xl: 2.25rem;
+	--text-5xl: 3rem;
+	--text-6xl: 3.75rem;
+	--text-7xl: 4.5rem;
+
+	/* Fonts */
+	--font-sans: 'Space Grotesk', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--font-serif: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+	/* Layout */
+	--page-width: 70rem;
+	--content-width: 48rem;
+
+	/* Radius */
+	--radius-sm: 0.5rem;
+	--radius-md: 1rem;
+	--radius-lg: 1.5rem;
+	--radius-xl: 2rem;
+
+	--theme-transition: 200ms;
+}
+
+/* Light-only theme: the :root block above is the single source of truth. */
+
+/* ===================================================================== */
+/* Base                                                                  */
+/* ===================================================================== */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	font-family: var(--font-sans);
+	scroll-behavior: smooth;
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	background: var(--background);
+	background-image: var(--background-noise);
+	background-size: 250px;
+	color: var(--text);
+	line-height: 1.6;
+	font-size: var(--text-md);
+	transition: background-color var(--theme-transition), color var(--theme-transition);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: var(--font-sans);
+	color: var(--text-strong);
+	line-height: 1.1;
+	letter-spacing: -0.02em;
+	font-weight: 700;
+	margin: 0;
+}
+
+h1 {
+	font-size: var(--text-4xl);
+}
+h2 {
+	font-size: var(--text-3xl);
+}
+h3 {
+	font-size: var(--text-2xl);
+}
+
+p {
+	margin: 0;
+}
+
+a {
+	color: var(--accent-text);
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+img,
+picture,
+video,
+canvas {
+	max-width: 100%;
+	height: auto;
+}
+
+button {
+	font: inherit;
+	cursor: pointer;
+}
+
+/* ===================================================================== */
+/* Layout helpers                                                        */
+/* ===================================================================== */
+
+.wrapper {
+	width: 100%;
+	max-width: var(--page-width);
+	margin-inline: auto;
+	padding-inline: var(--space-m);
+}
+
+@media (min-width: 50em) {
+	.wrapper {
+		padding-inline: var(--space-l);
+	}
+}
+
+main {
+	flex: 1;
+	width: 100%;
+	max-width: var(--content-width);
+	margin-inline: auto;
+	padding: var(--space-xl) var(--space-m);
+}
+
+@media (min-width: 50em) {
+	main {
+		padding: var(--space-2xl) var(--space-l);
+	}
+}
+
+.stack {
+	display: flex;
+	flex-direction: column;
+}
+
+.stack.gap-2 {
+	gap: var(--space-2xs);
+}
+.stack.gap-4 {
+	gap: var(--space-xs);
+}
+.stack.gap-8 {
+	gap: var(--space-s);
+}
+.stack.gap-20 {
+	gap: var(--space-xl);
+}
+.stack.gap-48 {
+	gap: var(--space-3xl);
+}
+
+/* ===================================================================== */
+/* Visibility + animations                                               */
+/* ===================================================================== */
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border-width: 0;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation: none;
+	mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+	z-index: 1;
+}
+::view-transition-new(root) {
+	z-index: 999;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+/* ===================================================================== */
+/* Selection + scrollbar                                                 */
+/* ===================================================================== */
+
+::selection {
+	background: hsl(var(--accent) / 0.25);
+}

@@ -1,0 +1,115 @@
+---
+import Icon from './Icon.astro';
+import { baseUrl, SITE_TITLE } from '../consts';
+
+const socials = [
+	{ href: 'https://github.com', icon: 'github', label: 'GitHub' },
+	{ href: 'https://twitter.com', icon: 'twitter', label: 'Twitter' },
+	{ href: 'https://linkedin.com', icon: 'linkedin', label: 'LinkedIn' },
+];
+---
+
+<footer class="footer">
+	<div class="wrapper footer-inner">
+		<div class="footer-brand">
+			<Icon icon="tag" size="1.4em" gradient={true} />
+			<span>{SITE_TITLE}</span>
+		</div>
+
+		<nav class="footer-links" aria-label="页脚导航">
+			<a href={baseUrl}>首页</a>
+			<a href={`${baseUrl}blog`}>文章</a>
+			<a href={`${baseUrl}about`}>关于</a>
+			<a href={`${baseUrl}rss.xml`}>RSS</a>
+		</nav>
+
+		<ul class="socials">
+			{
+				socials.map((s) => (
+					<li>
+						<a href={s.href} target="_blank" rel="noopener" aria-label={s.label}>
+							<Icon icon={s.icon} size="1.4em" />
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+
+	<div class="wrapper footer-bottom">
+		<p>&copy; {new Date().getFullYear()} {SITE_TITLE}. 保留所有权利。</p>
+	</div>
+</footer>
+
+<style>
+	.footer {
+		margin-top: var(--space-2xl);
+		border-top: 1px solid var(--border);
+		background: var(--gradient-subtle);
+		padding-block: var(--space-l);
+		transition: background-color var(--theme-transition), border-color var(--theme-transition);
+	}
+
+	.footer-inner {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-s);
+	}
+
+	.footer-brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5em;
+		font-weight: 700;
+		color: var(--text-strong);
+	}
+
+	.footer-links {
+		display: flex;
+		gap: var(--space-s);
+	}
+
+	.footer-links a {
+		color: var(--text-soft);
+		font-weight: 500;
+	}
+
+	.footer-links a:hover {
+		color: var(--accent-text);
+		text-decoration: none;
+	}
+
+	.socials {
+		display: flex;
+		gap: var(--space-xs);
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.socials a {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.25rem;
+		height: 2.25rem;
+		border: 1px solid var(--border);
+		border-radius: 999rem;
+		color: var(--text-soft);
+		transition: color var(--theme-transition), border-color var(--theme-transition);
+	}
+
+	.socials a:hover {
+		color: var(--accent-text);
+		border-color: hsl(var(--accent));
+		text-decoration: none;
+	}
+
+	.footer-bottom {
+		margin-top: var(--space-s);
+		color: var(--text-muted);
+		font-size: var(--text-sm);
+	}
+</style>
