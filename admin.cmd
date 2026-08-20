@@ -1,0 +1,1 @@
+npx decap-server

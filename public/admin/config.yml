@@ -1,12 +1,12 @@
 # Decap CMS 配置
-# 本地模式：运行 `npx decap-server` 后访问 /admin 即可可视化编辑，
-# 内容自动 commit 并 push 到 GitHub 仓库。
+# 本地模式：运行 `npm run cms`（decap-server）后访问后台即可可视化编辑，
+# 内容写入本地文件系统，推送到 GitHub 仓库后触发线上部署。
 
 backend:
-  name: local
-  # 部署到线上（GitHub Pages 子路径）时，管理后台通常仅本地使用。
-  # 如需在线上使用后台，请改为 github 后端并配置 GitHub OAuth App。
+  # 使用本地代理后端（配合 decap-server），须用 git-gateway
+  name: git-gateway
 
+# 启用本地代理：Decap 前端会把 /api/v1 请求转发到 decap-server(8081)
 local_backend: true
 
 # 媒体文件（图片）上传目录
