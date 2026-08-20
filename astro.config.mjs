@@ -6,8 +6,8 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-	// 部署到 GitHub Pages 子路径：https://zhangxiantian.github.io/x-space-blog-content/
-	site: 'https://zhangxiantian.github.io/x-space-blog-content',
-	base: '/x-space-blog-content',
+	// 部署到 GitHub Pages 子路径：https://zhichuangit.github.io/x-space-blog/
+	site: 'https://zhichuangit.github.io/x-space-blog',
+	base: '/x-space-blog',
 	integrations: [mdx(), sitemap()],
 });

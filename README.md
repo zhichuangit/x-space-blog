@@ -2,7 +2,7 @@
 
 基于 [Astro](https://astro.build) 的个人博客，内容使用 Markdown/MDX 文件管理，部署到 GitHub Pages。
 
-- **线上地址**：https://zhangxiantian.github.io/x-space-blog-content/
+- **线上地址**：https://zhichuangit.github.io/x-space-blog/
 - **内容管理**：Decap CMS（本地可视化编辑）+ Git 文件
 - **自动部署**：GitHub Actions，推送 `main` 分支即自动构建并发布
 
