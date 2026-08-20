@@ -9,6 +9,17 @@ const navLinks = [
 	{ href: `${baseUrl}about`, label: '关于' },
 	{ href: `${baseUrl}rss.xml`, label: 'RSS' },
 ];
+
+// 判断当前导航项是否为激活状态
+const pathname = Astro.url.pathname;
+const isActive = (href: string) => {
+	if (href === baseUrl) {
+		// 首页：路径正好是站点根（如 /x-space-blog/）
+		return pathname === href || pathname === href.replace(/\/$/, '');
+	}
+	// 其他：路径以该链接开头（如 /x-space-blog/blog/xxx 匹配「文章」）
+	return pathname.startsWith(href);
+};
 ---
 
 <nav class="nav">
@@ -21,7 +32,11 @@ const navLinks = [
 	<div class="nav-links desktop-only">
 		{
 			navLinks.map((link) => (
-				<a href={link.href} class="nav-link">
+				<a
+					href={link.href}
+					class:list={['nav-link', { active: isActive(link.href) }]}
+					aria-current={isActive(link.href) ? 'page' : undefined}
+				>
 					{link.label}
 				</a>
 			))
@@ -46,7 +61,11 @@ const navLinks = [
 <div id="nav-menu" class="nav-menu mobile-only" hidden>
 	{
 		navLinks.map((link) => (
-			<a href={link.href} class="nav-link">
+			<a
+				href={link.href}
+				class:list={['nav-link', { active: isActive(link.href) }]}
+				aria-current={isActive(link.href) ? 'page' : undefined}
+			>
 				{link.label}
 			</a>
 		))
@@ -96,6 +115,14 @@ const navLinks = [
 		color: var(--accent-text);
 		background: hsl(var(--accent) / 0.08);
 		text-decoration: none;
+	}
+
+	/* 当前页选中状态 */
+	.nav-link.active {
+		color: var(--accent-text);
+		background: var(--accent-washed);
+		font-weight: 600;
+		box-shadow: inset 0 0 0 1px hsl(var(--accent) / 0.25);
 	}
 
 	/* 桌面/移动端切换（默认桌面） */
