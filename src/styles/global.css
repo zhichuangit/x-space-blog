@@ -28,7 +28,7 @@
 
 	/* Page background with subtle radial accents + noise texture */
 	--background: var(--gray-50);
-	--background-noise: url('/noise.png');
+	/* 背景纹理 URL 由 BaseLayout 注入（支持 base 路径） */
 
 	--gradient-subtle: linear-gradient(180deg, hsl(var(--gray-0)), hsl(var(--gray-100)));
 	--gradient-fade: linear-gradient(180deg, hsl(var(--gray-100) / 0), hsl(var(--gray-100)));

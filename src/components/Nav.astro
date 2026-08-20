@@ -16,7 +16,8 @@ const navLinks = [
 		<span>{SITE_TITLE}</span>
 	</a>
 
-	<div class="nav-links">
+	<!-- 桌面端导航 -->
+	<div class="nav-links desktop-only">
 		{
 			navLinks.map((link) => (
 				<a href={link.href} class="nav-link">
@@ -25,7 +26,31 @@ const navLinks = [
 			))
 		}
 	</div>
+
+	<!-- 移动端汉堡按钮 -->
+	<button
+		class="nav-toggle mobile-only"
+		type="button"
+		aria-label="切换导航菜单"
+		aria-expanded="false"
+		aria-controls="nav-menu"
+	>
+		<span class="bar"></span>
+		<span class="bar"></span>
+		<span class="bar"></span>
+	</button>
 </nav>
+
+<!-- 移动端折叠菜单 -->
+<div id="nav-menu" class="nav-menu mobile-only" hidden>
+	{
+		navLinks.map((link) => (
+			<a href={link.href} class="nav-link">
+				{link.label}
+			</a>
+		))
+	}
+</div>
 
 <style>
 	.nav {
@@ -34,6 +59,7 @@ const navLinks = [
 		justify-content: space-between;
 		gap: var(--space-m);
 		padding: var(--space-s) 0;
+		position: relative;
 	}
 
 	.nav-brand {
@@ -43,6 +69,7 @@ const navLinks = [
 		font-weight: 700;
 		font-size: var(--text-lg);
 		color: var(--text-strong);
+		white-space: nowrap;
 	}
 
 	.nav-brand:hover {
@@ -70,12 +97,111 @@ const navLinks = [
 		text-decoration: none;
 	}
 
-	@media (max-width: 30em) {
-		.nav-links {
-			gap: var(--space-xs);
+	/* 桌面/移动端切换（默认桌面） */
+	.mobile-only {
+		display: none;
+	}
+	.desktop-only {
+		display: flex;
+	}
+
+	/* 汉堡按钮 */
+	.nav-toggle {
+		display: none;
+		flex-direction: column;
+		justify-content: space-between;
+		width: 2.25rem;
+		height: 1.75rem;
+		padding: 0.35rem 0.4rem;
+		background: transparent;
+		border: 1px solid var(--border);
+		border-radius: var(--radius-sm);
+		color: var(--text);
+	}
+
+	.nav-toggle .bar {
+		display: block;
+		height: 2px;
+		background: currentColor;
+		border-radius: 2px;
+		transition: transform 200ms ease, opacity 200ms ease;
+	}
+
+	/* 展开状态动画 */
+	.nav-toggle[aria-expanded='true'] .bar:nth-child(1) {
+		transform: translateY(0.45rem) rotate(45deg);
+	}
+	.nav-toggle[aria-expanded='true'] .bar:nth-child(2) {
+		opacity: 0;
+	}
+	.nav-toggle[aria-expanded='true'] .bar:nth-child(3) {
+		transform: translateY(-0.45rem) rotate(-45deg);
+	}
+
+	/* 折叠菜单 */
+	.nav-menu {
+		display: none;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		flex-direction: column;
+		gap: var(--space-2xs);
+		padding: var(--space-s);
+		margin: 0;
+		background: hsl(var(--gray-0) / 0.98);
+		backdrop-filter: blur(12px);
+		border-bottom: 1px solid var(--border);
+		box-shadow: var(--shadow-md);
+		list-style: none;
+		z-index: 40;
+	}
+
+	.nav-menu .nav-link {
+		display: block;
+		padding: 0.6em 0.75em;
+		font-size: var(--text-md);
+	}
+
+	/* === 窄屏：切换为汉堡菜单 === */
+	@media (max-width: 50em) {
+		.mobile-only {
+			display: flex;
 		}
-		.nav-link {
-			font-size: var(--text-sm);
+		.desktop-only {
+			display: none;
+		}
+		/* 尊重 [hidden] 属性：未隐藏的菜单才显示 */
+		.nav-menu:not([hidden]) {
+			display: flex;
+		}
+		.nav-menu[hidden] {
+			display: none;
 		}
 	}
 </style>
+
+<script>
+	// 汉堡菜单交互：点击切换 aria-expanded 和菜单显隐
+	document.addEventListener('astro:page-load', () => {
+		const btn = document.querySelector<HTMLButtonElement>('.nav-toggle');
+		const menu = document.getElementById('nav-menu');
+		if (!btn || !menu) return;
+
+		const setOpen = (open: boolean) => {
+			btn.setAttribute('aria-expanded', String(open));
+			if (open) menu.removeAttribute('hidden');
+			else menu.setAttribute('hidden', '');
+		};
+
+		btn.addEventListener('click', () => {
+			const isOpen = btn.getAttribute('aria-expanded') === 'true';
+			setOpen(!isOpen);
+		});
+
+		// 点击菜单项后自动关闭
+		menu.querySelectorAll('a').forEach((a) => {
+			a.addEventListener('click', () => setOpen(false));
+		});
+	});
+</script>
