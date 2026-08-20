@@ -10,8 +10,10 @@ backend:
 local_backend: true
 
 # 媒体文件（图片）上传目录
+# media_folder: 图片实际保存位置（相对仓库根目录）
+# public_folder: 写入文章字段的相对路径（相对文章所在目录 src/content/blog）
 media_folder: "src/assets/uploads"
-public_folder: "../assets/uploads"
+public_folder: "../../assets/uploads"
 
 collections:
   - name: "blog"

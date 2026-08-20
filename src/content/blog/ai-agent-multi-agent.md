@@ -4,7 +4,7 @@ description: Agent 不再是简单的对话机器人，而是一个能自主规�
   的技术演进、多智能体协作范式，以及它们对软件开发和内容生产带来的真实变革。
 pubDate: Aug 20 2026
 updatedDate: Aug 20 2026
-heroImage: ../assets/uploads/screenshot_2026-08-16_204439_439.png
+heroImage: ../../assets/uploads/screenshot_2026-08-19_011156_666.jpg
 ---
 
 如果说大语言模型（LLM）是人工智能的"大脑"，那么 AI Agent 就是让这个大脑真正"动手做事"的躯体。过去两年，AI 的能力已经从"回答问题"进化到"完成任务"，而这一切的核心，正是 Agent 架构的成熟。
