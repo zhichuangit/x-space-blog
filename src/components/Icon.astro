@@ -6,16 +6,18 @@ interface Props {
 	size?: string;
 	color?: string;
 	gradient?: boolean;
+	class?: string;
 }
 
-const { icon, size = '1em', color = 'currentColor', gradient = false } = Astro.props;
+const { icon, size = '1em', color = 'currentColor', gradient = false, class: className = '' } =
+	Astro.props;
 const path = iconPaths[icon];
 ---
 
 {
 	gradient ? (
 		<svg
-			class="icon-gradient"
+			class={`icon-gradient ${className}`}
 			width={size}
 			height={size}
 			viewBox="0 0 24 24"
@@ -37,6 +39,7 @@ const path = iconPaths[icon];
 		</svg>
 	) : (
 		<svg
+			class={className}
 			width={size}
 			height={size}
 			viewBox="0 0 24 24"

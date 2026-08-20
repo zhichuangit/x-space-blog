@@ -28,3 +28,20 @@ collections:
       - { label: "更新日期", name: "updatedDate", widget: "date", required: false, date_format: "MMM DD YYYY" }
       - { label: "封面图", name: "heroImage", widget: "image", required: false, choose_url: false }
       - { label: "正文", name: "body", widget: "markdown" }
+
+  - name: "resources"
+    label: "资源共享"
+    folder: "src/content/resources"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "标题", name: "title", widget: "string" }
+      - { label: "摘要", name: "description", widget: "text" }
+      - { label: "分类", name: "category", widget: "select", options: ["开源项目", "开源软件", "大模型", "其他"], default: "其他" }
+      - { label: "下载/访问链接", name: "link", widget: "string", hint: "如 GitHub 仓库、官网或下载地址" }
+      - { label: "文件大小", name: "size", widget: "string", required: false, hint: "如 7.2 GB（可选）" }
+      - { label: "版本", name: "version", widget: "string", required: false, hint: "如 v2.5.0（可选）" }
+      - { label: "发布日期", name: "pubDate", widget: "date", date_format: "MMM DD YYYY" }
+      - { label: "更新日期", name: "updatedDate", widget: "date", required: false, date_format: "MMM DD YYYY" }
+      - { label: "封面图", name: "heroImage", widget: "image", required: false, choose_url: false }
+      - { label: "正文", name: "body", widget: "markdown" }

@@ -1,0 +1,283 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from './BaseLayout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Icon from '../components/Icon.astro';
+import { baseUrl, SITE_TITLE } from '../consts';
+
+type Props = {
+	title: string;
+	description?: string;
+	category?: string;
+	link?: string;
+	size?: string;
+	version?: string;
+	pubDate: Date;
+	heroImage?: ImageMetadata;
+};
+
+const { title, description, category, link, size, version, pubDate, heroImage } = Astro.props;
+---
+
+<BaseLayout title={`${title} | ${SITE_TITLE}`} description={description}>
+	<main>
+		<article class="post stack gap-8">
+			<header class="post-header stack gap-4">
+				<div class="meta">
+					{category && <span class="category">{category}</span>}
+					<Icon icon="calendar" size="1.1em" />
+					<FormattedDate date={pubDate} />
+				</div>
+
+				<h1 class="title">{title}</h1>
+				{description && <p class="description">{description}</p>}
+
+				{/* 元信息 + 下载按钮 */}
+				<div class="info-bar stack gap-4">
+					<div class="info-chips">
+						{version && (
+							<span class="chip">
+								<Icon icon="tag" size="0.9em" />
+								版本：{version}
+							</span>
+						)}
+						{size && (
+							<span class="chip">
+								<Icon icon="download" size="0.9em" />
+								大小：{size}
+							</span>
+						)}
+					</div>
+
+					{link && (
+						<a href={link} class="download-btn" target="_blank" rel="noopener">
+							<Icon icon="download" size="1.2em" />
+							下载 / 访问
+							<Icon icon="arrow-up-right" size="1em" />
+						</a>
+					)}
+				</div>
+			</header>
+
+			{
+				heroImage && (
+					<div class="hero">
+						<Image width={1020} height={510} src={heroImage} alt={title} />
+					</div>
+				)
+			}
+
+			<div class="prose">
+				<slot />
+			</div>
+
+			<footer class="post-footer">
+				<a href={`${baseUrl}resources`} class="back-link">
+					<Icon icon="arrow-right" size="1.2em" class="flip" />
+					返回资源共享列表
+				</a>
+			</footer>
+		</article>
+	</main>
+</BaseLayout>
+
+<style>
+	.post {
+		gap: var(--space-l);
+	}
+
+	.post-header {
+		gap: var(--space-xs);
+	}
+
+	.meta {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6em;
+		color: var(--text-muted);
+		font-size: var(--text-sm);
+	}
+
+	.category {
+		font-size: var(--text-xs);
+		font-weight: 600;
+		padding: 0.2em 0.7em;
+		border-radius: 999rem;
+		color: var(--accent-text);
+		background: var(--accent-washed);
+	}
+
+	.title {
+		font-size: var(--text-4xl);
+		line-height: 1.05;
+	}
+
+	.description {
+		color: var(--text-soft);
+		font-size: var(--text-lg);
+		line-height: 1.6;
+		max-width: 60ch;
+	}
+
+	/* 元信息栏 + 下载按钮 */
+	.info-bar {
+		margin-top: var(--space-s);
+		padding: var(--space-m);
+		border: 1px solid var(--card-border);
+		border-radius: var(--radius-md);
+		background: hsl(var(--gray-0) / 0.5);
+	}
+
+	.info-chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-xs);
+	}
+
+	.chip {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35em;
+		font-size: var(--text-sm);
+		color: var(--text-soft);
+		padding: 0.3em 0.8em;
+		border: 1px solid var(--border);
+		border-radius: 999rem;
+	}
+
+	.download-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5em;
+		align-self: flex-start;
+		padding: 0.8em 1.75em;
+		border-radius: 999rem;
+		color: var(--accent-text-over);
+		font-weight: 600;
+		background: var(--gradient-accent);
+		box-shadow: var(--shadow-md);
+		transition: transform var(--theme-transition), box-shadow var(--theme-transition);
+	}
+
+	.download-btn:hover {
+		text-decoration: none;
+		transform: translateY(-2px);
+		box-shadow: var(--shadow-lg);
+	}
+
+	.hero {
+		border-radius: var(--radius-lg);
+		overflow: hidden;
+		box-shadow: var(--shadow-md);
+	}
+
+	.hero :global(img) {
+		width: 100%;
+		display: block;
+	}
+
+	.post-footer {
+		margin-top: var(--space-l);
+		padding-top: var(--space-m);
+		border-top: 1px solid var(--border);
+	}
+
+	.back-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5em;
+		font-weight: 600;
+	}
+
+	.back-link .flip {
+		transform: rotate(180deg);
+	}
+
+	/* ===================== Prose ===================== */
+	.prose {
+		max-width: var(--content-width);
+		color: var(--text);
+		font-size: var(--text-lg);
+		line-height: 1.75;
+	}
+
+	.prose :global(h2) {
+		margin-top: var(--space-xl);
+		margin-bottom: var(--space-s);
+		font-size: var(--text-2xl);
+	}
+
+	.prose :global(h3) {
+		margin-top: var(--space-l);
+		margin-bottom: var(--space-xs);
+		font-size: var(--text-xl);
+	}
+
+	.prose :global(p) {
+		margin-bottom: var(--space-m);
+	}
+
+	.prose :global(a) {
+		color: var(--accent-text);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	.prose :global(ul),
+	.prose :global(ol) {
+		margin-bottom: var(--space-m);
+		padding-left: var(--space-l);
+	}
+
+	.prose :global(li) {
+		margin-bottom: var(--space-2xs);
+	}
+
+	.prose :global(blockquote) {
+		margin: var(--space-l) 0;
+		padding: var(--space-s) var(--space-m);
+		border-left: 3px solid hsl(var(--accent));
+		background: hsl(var(--accent) / 0.06);
+		border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+		color: var(--text-soft);
+	}
+
+	.prose :global(code) {
+		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+		font-size: 0.9em;
+		background: hsl(var(--gray-200));
+		padding: 0.15em 0.4em;
+		border-radius: var(--radius-sm);
+	}
+
+	.prose :global(pre) {
+		padding: var(--space-m);
+		border-radius: var(--radius-md);
+		overflow-x: auto;
+		background: hsl(221 39% 11%);
+		color: hsl(220 14% 96%);
+	}
+
+	.prose :global(pre code) {
+		background: none;
+		padding: 0;
+	}
+
+	.prose :global(img) {
+		border-radius: var(--radius-md);
+		box-shadow: var(--shadow-sm);
+	}
+
+	.prose :global(hr) {
+		border: none;
+		border-top: 1px solid var(--border);
+		margin: var(--space-xl) 0;
+	}
+
+	@media (max-width: 50em) {
+		.title {
+			font-size: var(--text-3xl);
+		}
+	}
+</style>
