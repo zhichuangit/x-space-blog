@@ -1,6 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
-import DocsLayout from '../../layouts/DocsLayout.astro';
+import DeepseekHarnessDocsLayout from '../../layouts/DeepseekHarnessDocsLayout.astro';
 
 // 文档首页：渲染 index.md 作为书籍首页
 const docs = await getCollection('docs');
@@ -10,6 +10,6 @@ const { Content } = indexDoc ? await render(indexDoc) : { Content: () => null };
 const title = indexDoc?.data.title ?? 'DeepSeek Harness 源码解析指南';
 ---
 
-<DocsLayout title={title} currentId="index">
+<DeepseekHarnessDocsLayout title={title} currentId="index">
 	<Content />
-</DocsLayout>
+</DeepseekHarnessDocsLayout>

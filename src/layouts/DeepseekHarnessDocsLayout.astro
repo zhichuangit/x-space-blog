@@ -2,7 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import { baseUrl, SITE_TITLE } from '../consts';
-import { docsNav } from '../data/docsNav';
+import { docsNav } from '../data/deepseek-harness-docs-nav';
 
 interface Props {
 	title?: string;
@@ -51,7 +51,7 @@ const { prev, next } = getPrevNext(currentId);
 								{section.items.map((item) => (
 									<li>
 										<a
-											href={`${baseUrl}docs/${item.id}/`}
+											href={`${baseUrl}deepseek-harness-docs/${item.id}/`}
 											class:list={[
 												'docs-link',
 												{ active: item.id === currentId },
@@ -76,7 +76,7 @@ const { prev, next } = getPrevNext(currentId);
 
 			<nav class="docs-pagination" aria-label="文档分页">
 				{prev && (
-					<a href={`${baseUrl}docs/${prev.id}/`} class="page-link prev">
+					<a href={`${baseUrl}deepseek-harness-docs/${prev.id}/`} class="page-link prev">
 						<Icon icon="arrow-right" size="1em" class="flip" />
 						<div class="page-link-text">
 							<span>上一篇</span>
@@ -85,7 +85,7 @@ const { prev, next } = getPrevNext(currentId);
 					</a>
 				)}
 				{next && (
-					<a href={`${baseUrl}docs/${next.id}/`} class="page-link next">
+					<a href={`${baseUrl}deepseek-harness-docs/${next.id}/`} class="page-link next">
 						<div class="page-link-text">
 							<span>下一篇</span>
 							<strong>{next.label}</strong>

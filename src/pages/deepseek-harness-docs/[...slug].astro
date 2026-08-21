@@ -1,10 +1,10 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
-import DocsLayout from '../../layouts/DocsLayout.astro';
+import DeepseekHarnessDocsLayout from '../../layouts/DeepseekHarnessDocsLayout.astro';
 
 export async function getStaticPaths() {
 	const docs = await getCollection('docs');
-	// 排除 index（由 docs/index.astro 作为首页渲染），避免路由冲突
+	// 排除 index（由 index.astro 作为首页渲染），避免路由冲突
 	return docs
 		.filter((doc) => doc.id !== 'index')
 		.map((doc) => ({
@@ -26,6 +26,6 @@ function extractTitle(doc: CollectionEntry<'docs'>): string {
 const title = extractTitle(doc);
 ---
 
-<DocsLayout title={title} currentId={doc.id}>
+<DeepseekHarnessDocsLayout title={title} currentId={doc.id}>
 	<Content />
-</DocsLayout>
+</DeepseekHarnessDocsLayout>
