@@ -38,4 +38,19 @@ const resources = defineCollection({
 		}),
 });
 
-export const collections = { blog, resources };
+// 文档集合（deepseek-harness-docs）：只读展示，不进入 CMS 编辑。
+// 章节文件大多没有 frontmatter，标题从正文第一个 `#` 提取，故使用宽松 schema。
+const docs = defineCollection({
+	loader: glob({ base: './src/content/deepseek-harness-docs', pattern: '**/*.md' }),
+	schema: z.object({
+		// 允许存在，但均可选；无 frontmatter 的文件自动通过
+		title: z.string().optional(),
+		description: z.string().optional(),
+		layout: z.string().optional(),
+		hero: z.any().optional(),
+		features: z.array(z.any()).optional(),
+		pubDate: z.coerce.date().optional(),
+	}),
+});
+
+export const collections = { blog, resources, docs };

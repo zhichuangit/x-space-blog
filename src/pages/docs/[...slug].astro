@@ -1,0 +1,31 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import DocsLayout from '../../layouts/DocsLayout.astro';
+
+export async function getStaticPaths() {
+	const docs = await getCollection('docs');
+	// 排除 index（由 docs/index.astro 作为首页渲染），避免路由冲突
+	return docs
+		.filter((doc) => doc.id !== 'index')
+		.map((doc) => ({
+			params: { slug: doc.id },
+			props: doc,
+		}));
+}
+type Props = CollectionEntry<'docs'>;
+
+const doc = Astro.props;
+const { Content } = await render(doc);
+
+// 提取标题：优先用 frontmatter 的 title，否则从正文第一个 `#` 标题提取
+function extractTitle(doc: CollectionEntry<'docs'>): string {
+	if (doc.data.title) return doc.data.title;
+	const firstHeading = doc.body?.match(/^#\s+(.+)$/m);
+	return firstHeading ? firstHeading[1].trim() : doc.id;
+}
+const title = extractTitle(doc);
+---
+
+<DocsLayout title={title} currentId={doc.id}>
+	<Content />
+</DocsLayout>

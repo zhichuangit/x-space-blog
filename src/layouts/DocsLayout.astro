@@ -1,0 +1,431 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { baseUrl, SITE_TITLE } from '../consts';
+import { docsNav } from '../data/docsNav';
+
+interface Props {
+	title?: string;
+	description?: string;
+	currentId?: string;
+}
+
+const { title, description, currentId } = Astro.props;
+
+// 上一篇 / 下一篇
+function getPrevNext(currentId?: string) {
+	const all = docsNav.flatMap((s) => s.items.map((it) => ({ ...it, section: s.title })));
+	const idx = all.findIndex((it) => it.id === currentId);
+	return {
+		prev: idx > 0 ? all[idx - 1] : undefined,
+		next: idx >= 0 && idx < all.length - 1 ? all[idx + 1] : undefined,
+	};
+}
+const { prev, next } = getPrevNext(currentId);
+---
+
+<BaseLayout
+	title={`${title ?? '文档'} | ${SITE_TITLE}`}
+	description={description ?? 'DeepSeek Harness 源码解析指南'}
+>
+	<div class="docs-layout">
+		<!-- 移动端：目录展开/折叠按钮 -->
+		<button
+			class="docs-toc-toggle"
+			type="button"
+			aria-label="切换文档目录"
+			aria-expanded="false"
+			aria-controls="docs-sidebar"
+		>
+			<Icon icon="menu" size="1.2em" />
+			<span>目录</span>
+		</button>
+
+		<aside class="docs-sidebar" id="docs-sidebar" hidden>
+			<nav class="docs-nav" aria-label="文档目录">
+				{
+					docsNav.map((section) => (
+						<div class="docs-section">
+							<h4 class="docs-section-title">{section.title}</h4>
+							<ul class="docs-list">
+								{section.items.map((item) => (
+									<li>
+										<a
+											href={`${baseUrl}docs/${item.id}/`}
+											class:list={[
+												'docs-link',
+												{ active: item.id === currentId },
+											]}
+											aria-current={item.id === currentId ? 'page' : undefined}
+										>
+											{item.label}
+										</a>
+									</li>
+								))}
+							</ul>
+						</div>
+					))
+				}
+			</nav>
+		</aside>
+
+		<main class="docs-content">
+			<div class="docs-body">
+				<slot />
+			</div>
+
+			<nav class="docs-pagination" aria-label="文档分页">
+				{prev && (
+					<a href={`${baseUrl}docs/${prev.id}/`} class="page-link prev">
+						<Icon icon="arrow-right" size="1em" class="flip" />
+						<div class="page-link-text">
+							<span>上一篇</span>
+							<strong>{prev.label}</strong>
+						</div>
+					</a>
+				)}
+				{next && (
+					<a href={`${baseUrl}docs/${next.id}/`} class="page-link next">
+						<div class="page-link-text">
+							<span>下一篇</span>
+							<strong>{next.label}</strong>
+						</div>
+						<Icon icon="arrow-right" size="1em" />
+					</a>
+				)}
+			</nav>
+		</main>
+	</div>
+</BaseLayout>
+
+<style>
+	/* ===== 文档站整体布局 ===== */
+	.docs-layout {
+		display: grid;
+		grid-template-columns: 1fr;
+		max-width: var(--page-width);
+		margin-inline: auto;
+		width: 100%;
+		padding: var(--space-m);
+	}
+
+	@media (min-width: 64em) {
+		.docs-layout {
+			grid-template-columns: 18rem 1fr;
+			gap: var(--space-l);
+			padding: var(--space-l);
+		}
+	}
+
+	/* ===== 移动端：目录展开/折叠按钮 ===== */
+	.docs-toc-toggle {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5em;
+		padding: 0.6em 1em;
+		margin-bottom: var(--space-m);
+		background: var(--card);
+		border: 1px solid var(--card-border);
+		border-radius: var(--radius-sm);
+		color: var(--text);
+		font-size: var(--text-sm);
+		font-weight: 600;
+		align-self: flex-start;
+	}
+
+	@media (min-width: 64em) {
+		.docs-toc-toggle {
+			display: none;
+		}
+	}
+
+	/* ===== 左侧目录 ===== */
+	.docs-sidebar {
+		width: 100%;
+		padding: var(--space-m);
+		border: 1px solid var(--card-border);
+		border-radius: var(--radius-md);
+		background: var(--card);
+		max-height: 70vh;
+		overflow-y: auto;
+		position: sticky;
+		top: var(--space-s);
+	}
+
+	@media (min-width: 64em) {
+		.docs-sidebar {
+			border: none;
+			border-right: 1px solid var(--border);
+			padding: var(--space-xl) var(--space-l) var(--space-xl) 0;
+			background: transparent;
+			border-radius: 0;
+			height: calc(100vh - 4rem);
+			position: sticky;
+			top: var(--space-s);
+			max-height: calc(100vh - 4rem);
+		}
+		.docs-sidebar[hidden] {
+			display: block; /* 桌面端忽略 hidden */
+		}
+	}
+
+	.docs-section {
+		margin-bottom: var(--space-l);
+	}
+
+	.docs-section-title {
+		font-size: var(--text-xs);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--text-muted);
+		margin-bottom: var(--space-2xs);
+		padding: 0 0.5em;
+	}
+
+	.docs-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.docs-link {
+		display: block;
+		padding: 0.4em 0.5em;
+		border-radius: var(--radius-sm);
+		color: var(--text-soft);
+		font-size: var(--text-sm);
+		line-height: 1.5;
+		transition: color var(--theme-transition), background-color var(--theme-transition);
+	}
+
+	.docs-link:hover {
+		color: var(--accent-text);
+		background: hsl(var(--accent) / 0.06);
+		text-decoration: none;
+	}
+
+	.docs-link.active {
+		color: var(--accent-text);
+		background: var(--accent-washed);
+		font-weight: 600;
+	}
+
+	/* ===== 右侧正文 ===== */
+	.docs-content {
+		min-width: 0;
+		padding: var(--space-l) var(--space-m);
+	}
+
+	@media (min-width: 64em) {
+		.docs-content {
+			padding: var(--space-xl) var(--space-m) var(--space-3xl);
+		}
+	}
+
+	.docs-body {
+		max-width: var(--content-width);
+	}
+
+	/* ===== 正文排版（Markdown）===== */
+	.docs-body :global(h1) {
+		font-size: var(--text-4xl);
+		margin-bottom: var(--space-l);
+		padding-bottom: var(--space-s);
+		border-bottom: 1px solid var(--border);
+	}
+
+	.docs-body :global(h2) {
+		font-size: var(--text-2xl);
+		margin-top: var(--space-xl);
+		margin-bottom: var(--space-s);
+	}
+
+	.docs-body :global(h3) {
+		font-size: var(--text-xl);
+		margin-top: var(--space-l);
+		margin-bottom: var(--space-xs);
+	}
+
+	.docs-body :global(p) {
+		margin-bottom: var(--space-m);
+		line-height: 1.75;
+		color: var(--text);
+	}
+
+	.docs-body :global(a) {
+		color: var(--accent-text);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	.docs-body :global(ul),
+	.docs-body :global(ol) {
+		margin-bottom: var(--space-m);
+		padding-left: var(--space-l);
+	}
+
+	.docs-body :global(li) {
+		margin-bottom: var(--space-2xs);
+		line-height: 1.7;
+	}
+
+	.docs-body :global(blockquote) {
+		margin: var(--space-l) 0;
+		padding: var(--space-s) var(--space-m);
+		border-left: 3px solid hsl(var(--accent));
+		background: hsl(var(--accent) / 0.06);
+		border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+		color: var(--text-soft);
+	}
+
+	.docs-body :global(code) {
+		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+		font-size: 0.9em;
+		background: hsl(var(--gray-200));
+		padding: 0.15em 0.4em;
+		border-radius: var(--radius-sm);
+	}
+
+	.docs-body :global(pre) {
+		padding: var(--space-m);
+		border-radius: var(--radius-md);
+		overflow-x: auto;
+		background: hsl(221 39% 11%);
+		color: hsl(220 14% 96%);
+		line-height: 1.6;
+	}
+
+	.docs-body :global(pre code) {
+		background: none;
+		padding: 0;
+	}
+
+	.docs-body :global(table) {
+		width: 100%;
+		border-collapse: collapse;
+		margin-bottom: var(--space-l);
+		font-size: var(--text-sm);
+		display: block;
+		overflow-x: auto;
+	}
+
+	.docs-body :global(th),
+	.docs-body :global(td) {
+		border: 1px solid var(--border);
+		padding: 0.5em 0.75em;
+		text-align: left;
+	}
+
+	.docs-body :global(th) {
+		background: var(--gray-100);
+		font-weight: 600;
+	}
+
+	.docs-body :global(img) {
+		border-radius: var(--radius-md);
+		box-shadow: var(--shadow-sm);
+		max-width: 100%;
+		height: auto;
+	}
+
+	.docs-body :global(hr) {
+		border: none;
+		border-top: 1px solid var(--border);
+		margin: var(--space-xl) 0;
+	}
+
+	.docs-body :global(strong) {
+		color: var(--text-strong);
+	}
+
+	/* ===== 上一篇 / 下一篇 ===== */
+	.docs-pagination {
+		display: flex;
+		justify-content: space-between;
+		gap: var(--space-s);
+		margin-top: var(--space-2xl);
+		padding-top: var(--space-l);
+		border-top: 1px solid var(--border);
+	}
+
+	.page-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6em;
+		padding: var(--space-s) var(--space-m);
+		border: 1px solid var(--card-border);
+		border-radius: var(--radius-md);
+		color: var(--text);
+		transition: border-color var(--theme-transition), box-shadow var(--theme-transition);
+		max-width: 45%;
+	}
+
+	.page-link:hover {
+		text-decoration: none;
+		border-color: hsl(var(--accent));
+		box-shadow: var(--shadow-sm);
+	}
+
+	.page-link.next {
+		margin-left: auto;
+		text-align: right;
+	}
+
+	.page-link-text {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2em;
+		overflow: hidden;
+	}
+
+	.page-link-text span {
+		font-size: var(--text-xs);
+		color: var(--text-muted);
+	}
+
+	.page-link-text strong {
+		font-size: var(--text-sm);
+		color: var(--text-strong);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.page-link .flip {
+		transform: rotate(180deg);
+	}
+
+	/* ===== 移动端：目录折叠为可滚动抽屉（默认 hidden，由按钮控制） ===== */
+	@media (max-width: 64em) {
+		.docs-sidebar[hidden] {
+			display: none;
+		}
+	}
+</style>
+
+<script>
+	// 移动端目录展开/折叠
+	document.addEventListener('astro:page-load', () => {
+		const btn = document.querySelector<HTMLButtonElement>('.docs-toc-toggle');
+		const sidebar = document.getElementById('docs-sidebar');
+		if (!btn || !sidebar) return;
+
+		const setOpen = (open: boolean) => {
+			btn.setAttribute('aria-expanded', String(open));
+			if (open) sidebar.removeAttribute('hidden');
+			else sidebar.setAttribute('hidden', '');
+		};
+
+		btn.addEventListener('click', () => {
+			const isOpen = btn.getAttribute('aria-expanded') === 'true';
+			setOpen(!isOpen);
+		});
+
+		// 点击目录项跳转后自动关闭（移动端体验）
+		sidebar.querySelectorAll('a').forEach((a) => {
+			a.addEventListener('click', () => {
+				if (window.innerWidth < 64 * 16) setOpen(false);
+			});
+		});
+	});
+</script>
