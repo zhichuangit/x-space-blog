@@ -86,7 +86,8 @@ def extract_to_subdir(zip_bytes: bytes, base_dir: str, sub_name: str) -> None:
         "LASTUPDATED-ISSUE.md",
         "SYNC-LOGIC-REFERENCE.md",
         "ds-logo.svg",
-        "README.md"
+        "README.md",
+        "index.md"
     ]
     for rel in remove_after_sync:
         path = os.path.join(target_dir, rel)

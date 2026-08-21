@@ -1,11 +1,12 @@
 ---
 import { getCollection, render } from 'astro:content';
 import DeepseekHarnessDocsLayout from '../../layouts/DeepseekHarnessDocsLayout.astro';
+import EmptyContent from '../../components/EmptyContent.astro';
 
-// 文档首页：渲染 index.md 作为书籍首页
+// 文档首页：渲染 index.md 作为书籍首页（不存在时显示空内容）
 const docs = await getCollection('docs');
 const indexDoc = docs.find((d) => d.id === 'index');
-const { Content } = indexDoc ? await render(indexDoc) : { Content: () => null };
+const { Content } = indexDoc ? await render(indexDoc) : { Content: EmptyContent };
 
 const title = indexDoc?.data.title ?? 'DeepSeek Harness 源码解析指南';
 ---

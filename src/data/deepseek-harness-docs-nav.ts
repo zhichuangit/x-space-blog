@@ -15,7 +15,6 @@ export const docsNav: DocNavSection[] = [
 	{
 		title: '卷首',
 		items: [
-			{ id: 'index', label: '书籍首页' },
 			{ id: 'preface', label: '前言' },
 		],
 	},
